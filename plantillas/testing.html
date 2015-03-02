@@ -1,0 +1,77 @@
+<!doctype html>
+<html class="no-js" lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>WebApp</title>
+        <link rel="stylesheet" href="../public/assets/css/app.css" />
+        <script src="../bower_components/modernizr/modernizr.js"></script>
+    </head>
+    <body>
+        <div class="row">
+            <div class="small-12 columns">
+                <div class="text-center" style="margin-bottom: 50px">
+                    <h1>Web-app + Stardog DB</h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="small-8 small-centered columns">
+                <div class="text-center">
+                    <div class="boton button radius success">Query Naow!&nbsp;<i class="fa fa-send-o fa-lg fa-fw"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="small-8 small-centered columns">
+                <table id="resultados" cellspacing="0" cellpadding="0" width="100%">
+                </table>
+            </div>
+        </div>
+
+        <script src="../bower_components/mocha/mocha.js"></script>
+        <script src="../bower_components/lodash/dist/lodash.js"></script>
+        <script src="../bower_components/stardog/js/stardog.js"></script>
+        <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="../bower_components/foundation/js/foundation.min.js"></script>
+        <script src="../public/assets/js/app.js"></script>
+
+        <script type="text/javascript">
+            var conn = null;
+
+
+            $('.boton').click(function(){
+                iniciarConexion();
+                query();
+            });
+
+            function getTableHeaders(headerVars) {
+                var trHeaders = $("<tr></tr>");
+                for(var i in headerVars) {
+                    trHeaders.append( $("<th>" + headerVars[i] + "</th>") );
+                }
+                return trHeaders;
+            }
+
+            function getTableRow(headerVars, rowData) {
+                var tr = $("<tr></tr>");
+                for(var i in headerVars) {
+                    tr.append(getTableCell(headerVars[i], rowData));
+                }
+                return tr;
+            }
+
+            function getTableCell(fieldName, rowData) {
+                var td = $("<td></td>");
+                var fieldData = rowData[fieldName];
+                td.html(fieldData["value"]);
+                return td;
+            }
+
+
+            }
+        </script>
+    </body>
+</html>
