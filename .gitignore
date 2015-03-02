@@ -1,3 +1,10 @@
 /.sass-cache/*
 *.DS_Store
+/bower_components/fastclick
 
+/bower_components/jquery
+/bower_components/jquery.cookie
+/bower_components/jquery-placeholder
+/bower_components/lodash
+/bower_components/modernizr
+/bower_components/stardog
