@@ -1,0 +1,133 @@
+<!doctype html>
+<html class="no-js" lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Ontobecas - Becados</title>
+        <link rel="stylesheet" href="../public/assets/css/app.css" />
+        <script src="../bower_components/modernizr/modernizr.js"></script>
+    </head>
+    <body>
+
+        <div class="row">
+            <div class="small-9 small-centered columns">&nbsp;</div>
+        </div>
+        <div class="row">
+            <div class="small-9 small-centered columns panel callout radius">
+                <h5>Listado de becados</h5>
+                <table width="100%">
+                    <thead><tr>
+                        <th>LU</th>
+                        <th>Nombre</th>
+                        <th>PTD</th>
+                        <th>PDA</th>
+                        <th>PIF</th>
+                        <th>PCL</th>
+                        <th>PP</th>
+                        <th>PRA</th>
+                        <th>PCS</th>
+                        <th>PSV</th>
+                        <th>Total</th>
+                    </tr></thead>
+                    <tbody>
+                        <tr>
+                            <td>20001</td>
+                            <td>Pablito</td>
+                            <td>5</td>
+                            <th>4</th>
+                            <td>5</td>
+                            <th>4</th>
+                            <td>5</td>
+                            <th>4</th>
+                            <td>5</td>
+                            <th>4</th>
+                            <td>30</td>
+                        </tr>
+                        <tr>
+                            <td>20002</td>
+                            <td>Lala</td>
+                            <td>5</td>
+                            <th>4</th>
+                            <td>5</td>
+                            <th>4</th>
+                            <td>5</td>
+                            <th>4</th>
+                            <td>5</td>
+                            <th>4</th>
+                            <td>30</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h5>Alumnos no becados</h5>
+                <table width="100%">
+                    <thead><tr>
+                        <th>LU</th>
+                        <th>Nombre</th>
+                        <th>Situación</th>
+                        <th>Puntaje</th>
+                    </tr></thead>
+                    <tbody>
+                        <tr>
+                            <td>20003</td>
+                            <td>Juanito</td>
+                            <td>Rechazado</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>20004</td>
+                            <td>Lola</td>
+                            <td>Bajo puntaje</td>
+                            <td>12</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="small-9 small-centered columns"><a href="base.html" class="button expand">Volver</a></div>
+        </div>
+
+        <script src="../bower_components/mocha/mocha.js"></script>
+        <script src="../bower_components/lodash/dist/lodash.js"></script>
+        <script src="../bower_components/stardog/js/stardog.js"></script>
+        <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="../bower_components/foundation/js/foundation.min.js"></script>
+        <script src="../public/assets/js/app.js"></script>
+
+        <script type="text/javascript">
+            var conn = null;
+
+
+            $('.boton').click(function(){
+                iniciarConexion();
+                query();
+            });
+
+            function getTableHeaders(headerVars) {
+                var trHeaders = $("<tr></tr>");
+                for(var i in headerVars) {
+                    trHeaders.append( $("<th>" + headerVars[i] + "</th>") );
+                }
+                return trHeaders;
+            }
+
+            function getTableRow(headerVars, rowData) {
+                var tr = $("<tr></tr>");
+                for(var i in headerVars) {
+                    tr.append(getTableCell(headerVars[i], rowData));
+                }
+                return tr;
+            }
+
+            function getTableCell(fieldName, rowData) {
+                var td = $("<td></td>");
+                var fieldData = rowData[fieldName];
+                td.html(fieldData["value"]);
+                return td;
+            }
+
+
+            }
+        </script>
+    </body>
+</html>

@@ -3,24 +3,55 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Ontobecas - Inicio</title>
+        <title>Ontobecas - Alumnos</title>
         <link rel="stylesheet" href="../public/assets/css/app.css" />
         <script src="../bower_components/modernizr/modernizr.js"></script>
     </head>
     <body>
-<!--        Aca va el cuerpo!!!-->
 
         <div class="row">
             <div class="small-9 small-centered columns">&nbsp;</div>
         </div>
         <div class="row">
             <div class="small-9 small-centered columns panel callout radius">
-                <h5>Bienvenido a Ontobecas...</h5>
-                <ul class="stack button-group">
-                    <li><a href="alumnos.html" class="button">Datos de alumnos</a></li>
-                    <li><a href="asistente.html" class="button">Asistente de becas</a></li>
-                </ul>
+                <h5>Listado de alumnos</h5>
+                <table width="100%">
+                    <thead><tr>
+                        <th>LU</th>
+                        <th>Nombre</th>
+                        <th>Sexo</th>
+                        <th>¿Ingresante?</th>
+                        <th>Opciones</th>
+                    </tr></thead>
+                    <tbody>
+                        <tr>
+                            <td>20001</td>
+                            <td>Pablito</td>
+                            <td>Masculino</td>
+                            <td>Si</td>
+                            <td>
+                                <a href="#" title="Ver grupo familiar"><i class="fa fa-home fa-lg"></i></a>
+                                <a href="#" title="Ver historia academica"><i class="fa fa-graduation-cap fa-lg"></i></a>
+                                <a href="#" title="Ver datos completos"><i class="fa fa-user fa-lg"></i></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>20002</td>
+                            <td>Lala</td>
+                            <td>Femenino</td>
+                            <td>No</td>
+                            <td>
+                                <a href="#" title="Ver grupo familiar"><i class="fa fa-home fa-lg"></i></a>
+                                <a href="#" title="Ver historia academica"><i class="fa fa-graduation-cap fa-lg"></i></a>
+                                <a href="#" title="Ver datos completos"><i class="fa fa-user fa-lg"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
+        </div>
+        <div class="row">
+            <div class="small-9 small-centered columns"><a href="base.html" class="button expand">Volver</a></div>
         </div>
 
         <script src="../bower_components/mocha/mocha.js"></script>
