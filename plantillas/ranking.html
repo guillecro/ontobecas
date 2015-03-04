@@ -94,38 +94,50 @@
         <script src="../public/assets/js/app.js"></script>
 
         <script type="text/javascript">
-            var conn = null;
-
-
-            $('.boton').click(function(){
-                iniciarConexion();
-                query();
+            $(document).ready(function() {
+                enviarConsulta();
             });
 
-            function getTableHeaders(headerVars) {
-                var trHeaders = $("<tr></tr>");
-                for(var i in headerVars) {
-                    trHeaders.append( $("<th>" + headerVars[i] + "</th>") );
-                }
-                return trHeaders;
+            function enviarConsulta() {
+                /* Cantidad materias aprobadas
+                var querySPARQL = "SELECT ?lu ?nombre (COUNT(DISTINCT(?materia)) AS ?cantidadMaterias)" +
+                    "WHERE { {?x a onto:Alumno} {?x onto:NombreCompleto ?nombre} {?x onto:LU ?lu}" +
+                    "{?materia a onto:Materia} {?x onto:TieneAprobada ?materia} }" +
+                    "GROUP BY ?lu ?nombre";
+                */
+
+                /* Cantidad materias aprobadas ciclo anterior
+                var subQuery = "SELECT ?anio " +
+                    "WHERE { {?x a onto:CicloLectivoActual} {?x onto:AnioLectivo ?anio} }";
+
+                var querySPARQL = "SELECT ?lu ?nombre (COUNT(DISTINCT(?materia)) AS ?cantidadMaterias)" +
+                    "WHERE { {?x a onto:Alumno} {?x onto:NombreCompleto ?nombre} {?x onto:LU ?lu}" +
+                    "{?materia a onto:Materia} {?x onto:TieneAprobada ?materia} }" +
+                    "{?examen a onto:Examen} {?x onto:Rindio ?examen} {?examen onto:ReferidoA ?materia}" +
+                    "{?examen onto:FechaRendida "+ (valorDeSubQuery-1) +"} }" +
+                    "GROUP BY ?lu ?nombre";
+                */
+
+
+                /* Cantidad materias regularizadas
+                var querySPARQL = "SELECT ?lu ?nombre (COUNT(DISTINCT(?materia)) AS ?cantidadMaterias)" +
+                    "WHERE { {?x a onto:Alumno} {?x onto:NombreCompleto ?nombre} {?x onto:LU ?lu}" +
+                    "{?materia a onto:Materia} {?x onto:TieneRegularizada ?materia} }" +
+                    "GROUP BY ?lu ?nombre";
+                */
+
+                /* Promedios
+                var querySPARQL = "SELECT ?lu ?nombre (AVG(?nota) AS ?promedio)" +
+                    "WHERE { {?x a onto:Alumno} {?x onto:NombreCompleto ?nombre} {?x onto:LU ?lu}" +
+                    "{?examen a onto:Examen} {?x onto:Rindio ?examen} {?examen onto:Calificacion ?nota} }" +
+                    "GROUP BY ?lu ?nombre";
+                */
+                ejecutarQuery(querySPARQL, obtenerDatos);
             }
 
-            function getTableRow(headerVars, rowData) {
-                var tr = $("<tr></tr>");
-                for(var i in headerVars) {
-                    tr.append(getTableCell(headerVars[i], rowData));
-                }
-                return tr;
-            }
-
-            function getTableCell(fieldName, rowData) {
-                var td = $("<td></td>");
-                var fieldData = rowData[fieldName];
-                td.html(fieldData["value"]);
-                return td;
-            }
-
-
+            function obtenerDatos(datos) {
+                var datosHeader = datos.head.vars;
+                var resultado = datos.results.bindings;
             }
         </script>
     </body>

@@ -17,8 +17,8 @@
             <div class="small-9 small-centered columns panel callout radius">
                 <h5>Asistente de becas</h5>
                 <ul>
-                    <li>El año actual es: lala</li>
-                    <li>El valor de la canasta básica familiar es: lala</li>
+                    <li>El año actual es: <span id="campoAnio">x</span></li>
+                    <li>El valor de la canasta básica familiar es: <span id="campoCanasta">x</span></li>
                 </ul>
                 <a href="ranking.html" class="button alert expand">Asignar becas</a>
             </div>
@@ -34,38 +34,27 @@
         <script src="../public/assets/js/app.js"></script>
 
         <script type="text/javascript">
-            var conn = null;
-
-
-            $('.boton').click(function(){
-                iniciarConexion();
-                query();
+            $(document).ready(function() {
+                enviarConsulta();
             });
 
-            function getTableHeaders(headerVars) {
-                var trHeaders = $("<tr></tr>");
-                for(var i in headerVars) {
-                    trHeaders.append( $("<th>" + headerVars[i] + "</th>") );
+            function enviarConsulta() {
+                var querySPARQL = "SELECT ?anio ?canasta "
+                + "WHERE {"
+                + "{?x a onto:CicloLectivoActual}"
+                + "{?x onto:AnioLectivo ?anio}"
+                + "{?x onto:ValorCanastaFamiliar ?canasta}"
+                + "}";
+                ejecutarQuery(querySPARQL, obtenerDatos);
+            }
+
+            function obtenerDatos(datos) {
+                var datosHeader = datos.head.vars;
+                var resultado = datos.results.bindings;
+                if (resultado.length > 0) {
+                    $("#campoAnio").text(resultado[0].anio.value);
+                    $("#campoCanasta").text(resultado[0].canasta.value);
                 }
-                return trHeaders;
-            }
-
-            function getTableRow(headerVars, rowData) {
-                var tr = $("<tr></tr>");
-                for(var i in headerVars) {
-                    tr.append(getTableCell(headerVars[i], rowData));
-                }
-                return tr;
-            }
-
-            function getTableCell(fieldName, rowData) {
-                var td = $("<td></td>");
-                var fieldData = rowData[fieldName];
-                td.html(fieldData["value"]);
-                return td;
-            }
-
-
             }
         </script>
     </body>
