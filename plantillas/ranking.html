@@ -94,50 +94,138 @@
         <script src="../public/assets/js/app.js"></script>
 
         <script type="text/javascript">
+            var anioActual = 2015;
+
             $(document).ready(function() {
-                enviarConsulta();
+                var querySPARQL = "SELECT ?anio WHERE { {?x a onto:CicloLectivoActual} {?x onto:AnioLectivo ?anio} }";
+                ejecutarQuery(querySPARQL, obtenerAnio);
             });
 
-            function enviarConsulta() {
-                /* Cantidad materias aprobadas
-                var querySPARQL = "SELECT ?lu ?nombre (COUNT(DISTINCT(?materia)) AS ?cantidadMaterias)" +
-                    "WHERE { {?x a onto:Alumno} {?x onto:NombreCompleto ?nombre} {?x onto:LU ?lu}" +
-                    "{?materia a onto:Materia} {?x onto:TieneAprobada ?materia} }" +
-                    "GROUP BY ?lu ?nombre";
-                */
+            function obtenerAnio(datos) {
+                var resultado = datos.results.bindings;
+                if (resultado.length > 0) {
+                    anioActual = resultado[0].anio.value;
+                }
+                borrarDependientes();
+            }
 
-                /* Cantidad materias aprobadas ciclo anterior
-                var subQuery = "SELECT ?anio " +
-                    "WHERE { {?x a onto:CicloLectivoActual} {?x onto:AnioLectivo ?anio} }";
+            function borrarDependientes() {
+                ejecutarQuery(genQueryDelete('ACHijosDependientes'), calcularDependientes);
+            }
+            function calcularDependientes(datos) {
+                var querySPARQL = 'SELECT ?x (COUNT(DISTINCT(?hijo)) AS ?y) WHERE { {?x a onto:Alumno} ' +
+                    '{?hijo a onto:FamiliarDependiente} {?x onto:ViveCon ?hijo} {?hijo onto:Parentesco "Hijo"} } GROUP BY ?x';
+                ejecutarQuery(querySPARQL, cargarDependientes);
+            }
+            function cargarDependientes(datos) {
+                ejecutarQuery(genQueryInsert(datos.results.bindings, 'ACHijosDependientes'), borrarFamiliares);
+            }
 
-                var querySPARQL = "SELECT ?lu ?nombre (COUNT(DISTINCT(?materia)) AS ?cantidadMaterias)" +
-                    "WHERE { {?x a onto:Alumno} {?x onto:NombreCompleto ?nombre} {?x onto:LU ?lu}" +
+            function borrarFamiliares() {
+                ejecutarQuery(genQueryDelete('ACFamiliaresActivos'), calcularFamiliares);
+            }
+            function calcularFamiliares(datos) {
+                var querySPARQL = "SELECT ?x (COUNT(DISTINCT(?familiar)) AS ?y) WHERE { {?x a onto:Alumno} " +
+                    "{?familiar a onto:FamiliarMayor} {?x onto:ViveCon ?familiar} } GROUP BY ?x";
+                ejecutarQuery(querySPARQL, cargarFamiliares);
+            }
+            function cargarFamiliares(datos) {
+                ejecutarQuery(genQueryInsert(datos.results.bindings, 'ACFamiliaresActivos'), borrarLaboral);
+            }
+
+            function borrarLaboral() {
+                ejecutarQuery(genQueryDelete('ACSumaCLValor'), calcularLaboral);
+            }
+            function calcularLaboral(datos) {
+                var querySPARQL = "SELECT ?x (SUM(?clValor) AS ?y) WHERE { {?x a onto:Alumno} {?familiar a onto:FamiliarMayor} " +
+                    "{?x onto:ViveCon ?familiar} {?familiar onto:CondicionLaboralValor ?clValor} } GROUP BY ?x";
+                ejecutarQuery(querySPARQL, cargarLaboral);
+            }
+            function cargarLaboral(datos) {
+                ejecutarQuery(genQueryInsert(datos.results.bindings, 'ACSumaCLValor'), borrarIngresos);
+            }
+
+            function borrarIngresos() {
+                ejecutarQuery(genQueryDelete('ACIngresosFamilia'), calcularIngresos);
+            }
+            function calcularIngresos(datos) {
+                var querySPARQL = "SELECT ?x (SUM(?sueldo) AS ?y) WHERE { {?x a onto:Alumno} {?familiar a onto:FamiliarMayor} " +
+                    "{?x onto:ViveCon ?familiar} {?familiar onto:IngresoMensual ?sueldo} } GROUP BY ?x";
+                ejecutarQuery(querySPARQL, cargarIngresos);
+            }
+            function cargarIngresos(datos) {
+                ejecutarQuery(genQueryInsert(datos.results.bindings, 'ACIngresosFamilia'), borrarPromedios);
+            }
+
+            function borrarPromedios() {
+                ejecutarQuery(genQueryDelete('ACPromedio'), calcularPromedios);
+            }
+            function calcularPromedios(datos) {
+                var querySPARQL = "SELECT ?x (AVG(?nota) AS ?y) WHERE { {?x a onto:Alumno} {?examen a onto:Examen} " +
+                    "{?x onto:Rindio ?examen} {?examen onto:Calificacion ?nota} } GROUP BY ?x";
+                ejecutarQuery(querySPARQL, cargarPromedios);
+            }
+            function cargarPromedios(datos) {
+                ejecutarQuery(genQueryInsert(datos.results.bindings, 'ACPromedio'), borrarAprobadas);
+            }
+
+            function borrarAprobadas() {
+                ejecutarQuery(genQueryDelete('ACMateriasAprobadas'), calcularAprobadas);
+            }
+            function calcularAprobadas(datos) {
+                var querySPARQL = "SELECT ?x (COUNT(DISTINCT(?materia)) AS ?y) WHERE { {?x a onto:Alumno} " +
+                    "{?materia a onto:Materia} {?x onto:TieneAprobada ?materia} } GROUP BY ?x";
+                ejecutarQuery(querySPARQL, cargarAprobadas);
+            }
+            function cargarAprobadas(datos) {
+                ejecutarQuery(genQueryInsert(datos.results.bindings, 'ACMateriasAprobadas'), borrarRegulares);
+            }
+
+            function borrarRegulares() {
+                ejecutarQuery(genQueryDelete('ACMateriasRegulares'), calcularRegulares);
+            }
+            function calcularRegulares(datos) {
+                var querySPARQL = "SELECT ?x (COUNT(DISTINCT(?materia)) AS ?y) WHERE { {?x a onto:Alumno} " +
+                    "{?materia a onto:Materia} {?x onto:TieneRegularizada ?materia} } GROUP BY ?x";
+                ejecutarQuery(querySPARQL, cargarRegulares);
+            }
+            function cargarRegulares(datos) {
+                ejecutarQuery(genQueryInsert(datos.results.bindings, 'ACMateriasRegulares'), borrarAprobRecien);
+            }
+
+            "WHERE { {?x a onto:Alumno} {?x onto:NombreCompleto ?nombre} {?x onto:LU ?lu}" +
                     "{?materia a onto:Materia} {?x onto:TieneAprobada ?materia} }" +
                     "{?examen a onto:Examen} {?x onto:Rindio ?examen} {?examen onto:ReferidoA ?materia}" +
                     "{?examen onto:FechaRendida "+ (valorDeSubQuery-1) +"} }" +
-                    "GROUP BY ?lu ?nombre";
-                */
 
-
-                /* Cantidad materias regularizadas
-                var querySPARQL = "SELECT ?lu ?nombre (COUNT(DISTINCT(?materia)) AS ?cantidadMaterias)" +
-                    "WHERE { {?x a onto:Alumno} {?x onto:NombreCompleto ?nombre} {?x onto:LU ?lu}" +
-                    "{?materia a onto:Materia} {?x onto:TieneRegularizada ?materia} }" +
-                    "GROUP BY ?lu ?nombre";
-                */
-
-                /* Promedios
-                var querySPARQL = "SELECT ?lu ?nombre (AVG(?nota) AS ?promedio)" +
-                    "WHERE { {?x a onto:Alumno} {?x onto:NombreCompleto ?nombre} {?x onto:LU ?lu}" +
-                    "{?examen a onto:Examen} {?x onto:Rindio ?examen} {?examen onto:Calificacion ?nota} }" +
-                    "GROUP BY ?lu ?nombre";
-                */
-                ejecutarQuery(querySPARQL, obtenerDatos);
+            function borrarAprobRecien() {
+                ejecutarQuery(genQueryDelete('ACMateriasAprobadasCicloAnterior'), calcularAprobRecien);
+            }
+            function calcularAprobRecien(datos) {
+                var querySPARQL = "SELECT ?x (COUNT(DISTINCT(?materia)) AS ?y) WHERE { {?x a onto:Alumno} " +
+                    "{?materia a onto:Materia} {?x onto:TieneAprobada ?materia} {?examen a onto:Examen} " +
+                    "{?x onto:Rindio ?examen} {?examen onto:ReferidoA ?materia} } " +
+                    "{?examen onto:FechaRendida "+ (anioActual-1) +"} GROUP BY ?x";
+                ejecutarQuery(querySPARQL, cargarAprobRecien);
+            }
+            function cargarAprobRecien(datos) {
+                ejecutarQuery(genQueryInsert(datos.results.bindings, 'ACMateriasAprobadasCicloAnterior'), terminarCalculos);
             }
 
-            function obtenerDatos(datos) {
-                var datosHeader = datos.head.vars;
-                var resultado = datos.results.bindings;
+            function genQueryDelete(attributo) {
+                return = 'DELETE { ?x onto:' + attributo + ' ?y } WHERE { ?x onto:' + attributo + ' ?y }';
+            }
+            function genQueryInsert(resultado, attributo) {
+                var query = 'INSERT DATA { ';
+                for(i in resultado) {
+                    query += '<' + resultado[i].x.value + '> onto:' + attributo + ' ' + resultado[i].y.value + '. ';
+                }
+                query += '}';
+                return query;
+            }
+
+            function terminarCalculos() {
+                alert('holis');
             }
         </script>
     </body>

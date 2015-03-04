@@ -1,0 +1,58 @@
+var querySPARQL = "SELECT ?lu ?nombre (COUNT(DISTINCT(?materia)) AS ?cantidadMaterias)" +
+                    "WHERE { {?x a onto:Alumno} {?x onto:NombreCompleto ?nombre} {?x onto:LU ?lu}" +
+                    "{?materia a onto:Materia} {?x onto:TieneAprobada ?materia} }" +
+                    "GROUP BY ?lu ?nombre";
+                */
+
+                /* Cantidad materias aprobadas ciclo anterior
+                var subQuery = "SELECT ?anio " +
+                    "WHERE { {?x a onto:CicloLectivoActual} {?x onto:AnioLectivo ?anio} }";
+
+                var querySPARQL = "SELECT ?lu ?nombre (COUNT(DISTINCT(?materia)) AS ?cantidadMaterias)" +
+                    "WHERE { {?x a onto:Alumno} {?x onto:NombreCompleto ?nombre} {?x onto:LU ?lu}" +
+                    "{?materia a onto:Materia} {?x onto:TieneAprobada ?materia} }" +
+                    "{?examen a onto:Examen} {?x onto:Rindio ?examen} {?examen onto:ReferidoA ?materia}" +
+                    "{?examen onto:FechaRendida "+ (valorDeSubQuery-1) +"} }" +
+                    "GROUP BY ?lu ?nombre";
+                */
+
+
+                /* Cantidad materias regularizadas
+                var querySPARQL = "SELECT ?lu ?nombre (COUNT(DISTINCT(?materia)) AS ?cantidadMaterias)" +
+                    "WHERE { {?x a onto:Alumno} {?x onto:NombreCompleto ?nombre} {?x onto:LU ?lu}" +
+                    "{?materia a onto:Materia} {?x onto:TieneRegularizada ?materia} }" +
+                    "GROUP BY ?lu ?nombre";
+                */
+                
+                /* Ingresos Familia 
+                var querySPARQL = "SELECT ?lu ?nombre (SUM(?sueldo) AS ?ingresos)" +
+                    "WHERE { {?x a onto:Alumno} {?x onto:NombreCompleto ?nombre} {?x onto:LU ?lu}" +
+                    "{?familiar a onto:FamiliarMayor} {?x onto:ViveCon ?familiar} {?familiar onto:IngresoMensual ?sueldo} }" +
+                    "GROUP BY ?lu ?nombre";
+                */
+                
+                /* Condicion Laboral Familia 
+                var querySPARQL = "SELECT ?lu ?nombre (SUM(?clValor) AS ?clTotal)" +
+                    "WHERE { {?x a onto:Alumno} {?x onto:NombreCompleto ?nombre} {?x onto:LU ?lu}" +
+                    "{?familiar a onto:FamiliarMayor} {?x onto:ViveCon ?familiar} {?familiar onto:CondicionLaboralValor ?clValor} }" +
+                    "GROUP BY ?lu ?nombre";
+                */
+                
+                /* Cantidad familiares activos 
+                var querySPARQL = "SELECT ?lu ?nombre (COUNT(DISTINCT(?familiar)) AS ?cantidadFamiliares)" +
+                    "WHERE { {?x a onto:Alumno} {?x onto:NombreCompleto ?nombre} {?x onto:LU ?lu}" +
+                    "{?familiar a onto:FamiliarMayor} {?x onto:ViveCon ?familiar} }" +
+                    "GROUP BY ?lu ?nombre";
+                */
+                
+                /* Cantidad hijos dependientes
+                var querySPARQL = "SELECT ?lu ?nombre (COUNT(DISTINCT(?hijo)) AS ?cantidadDependientes)" +
+                    "WHERE { {?x a onto:Alumno} {?x onto:NombreCompleto ?nombre} {?x onto:LU ?lu}" +
+                    '{?hijo a onto:FamiliarDependiente} {?x onto:ViveCon ?hijo} {?hijo onto:Parentesco "Hijo"} }' +
+                    "GROUP BY ?lu ?nombre";
+                */
+                
+                /*var querySPARQL = "SELECT ?x (COUNT(DISTINCT(?materia)) AS ?cantidadMaterias)" +
+                    "WHERE { {?x a onto:Alumno} {?x onto:NombreCompleto ?nombre} {?x onto:LU ?lu}" +
+                    "{?materia a onto:Materia} {?x onto:TieneAprobada ?materia} }" +
+                    "GROUP BY ?x";*/
