@@ -15,46 +15,35 @@
         <div class="row">
             <div class="small-9 small-centered columns panel callout radius">
                 <h5>Listado de alumnos</h5>
-                <table width="100%">
+                <table id="listaAlumnos" width="100%">
                     <thead><tr>
                         <th>LU</th>
                         <th>Nombre</th>
                         <th>Sexo</th>
                         <th>¿Ingresante?</th>
                         <th>Opciones</th>
-                    </tr></thead>
+                        </tr>
+                    </thead>
                     <tbody>
-                        <tr>
-                            <td>20001</td>
-                            <td>Pablito</td>
-                            <td>Masculino</td>
-                            <td>Si</td>
-                            <td>
-                                <a href="#" title="Ver grupo familiar"><i class="fa fa-home fa-lg"></i></a>
-                                <a href="#" title="Ver historia academica"><i class="fa fa-graduation-cap fa-lg"></i></a>
-                                <a href="#" title="Ver datos completos"><i class="fa fa-user fa-lg"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>20002</td>
-                            <td>Lala</td>
-                            <td>Femenino</td>
-                            <td>No</td>
-                            <td>
-                                <a href="#" title="Ver grupo familiar"><i class="fa fa-home fa-lg"></i></a>
-                                <a href="#" title="Ver historia academica"><i class="fa fa-graduation-cap fa-lg"></i></a>
-                                <a href="#" title="Ver datos completos"><i class="fa fa-user fa-lg"></i></a>
-                            </td>
-                        </tr>
+
                     </tbody>
                 </table>
+                <div class="standby text-center">
+                   <i class="fa fa-spinner fa-pulse fa-fw fa-lg"></i><br />
+                   Cargando
+                </div>
             </div>
         </div>
         <div class="row">
             <div class="small-9 small-centered columns"><a href="base.html" class="button expand">Volver</a></div>
         </div>
 
-        <script src="../bower_components/mocha/mocha.js"></script>
+        <div class="bt-opciones" hidden>
+            <a href="#" title="Ver grupo familiar"><i class="fa fa-home fa-lg fa-fw"></i></a>
+            <a href="#" title="Ver historia academica"><i class="fa fa-graduation-cap fa-lg fa-fw"></i></a>
+            <a href="#" title="Ver datos completos"><i class="fa fa-user fa-lg fa-fw"></i></a>
+        </div>
+
         <script src="../bower_components/lodash/dist/lodash.js"></script>
         <script src="../bower_components/stardog/js/stardog.js"></script>
         <script src="../bower_components/jquery/dist/jquery.min.js"></script>
@@ -62,38 +51,60 @@
         <script src="../public/assets/js/app.js"></script>
 
         <script type="text/javascript">
-            var conn = null;
+            var btOpciones = $(".bt-opciones").html();
 
-
-            $('.boton').click(function(){
-                iniciarConexion();
-                query();
+            $(document).ready(function() {
+                listarAlumnos();
             });
 
-            function getTableHeaders(headerVars) {
-                var trHeaders = $("<tr></tr>");
-                for(var i in headerVars) {
-                    trHeaders.append( $("<th>" + headerVars[i] + "</th>") );
-                }
-                return trHeaders;
+            $('.boton').click(function(){
+
+            });
+
+            function listarAlumnos(querySPARQL){
+                var tabla = $("#listaAlumnos");
+                var querySPARQL = "SELECT ?lu ?nombre ?sexo ?ingresante "
+                + "WHERE {"
+                + "{?x a onto:Alumno}"
+                + "{?x onto:LU ?lu}"
+                + "{?x onto:NombreCompleto ?nombre}"
+                + "{?x onto:Sexo ?sexo}"
+                + "{?x onto:Ingresante ?ingresante}"
+                + "}";
+                // Se ejecuta el querySPARQL.
+                ejecutarQuery(querySPARQL, function(datos) {
+                    $('.standby').slideToggle();
+                    var datosHeader = datos.head.vars;
+                    var datosFilas = datos.results.bindings;
+
+                    for(fila in datosFilas){
+                        //Cambio los true/false por Si/No.
+                        if(datosFilas[fila]['ingresante'].value == "true"){
+                            datosFilas[fila]['ingresante'].value = "Si";
+                        } else { datosFilas[fila]['ingresante'].value = "No";}
+                    }
+
+                    for(fila in datosFilas){
+                        // Para cada resultado, hago la fila correspondiente.
+                        tabla.append(listaAlumnoFila(datosHeader, datosFilas[fila]));
+                    }
+                });
             }
 
-            function getTableRow(headerVars, rowData) {
+            function listaAlumnoFila(headerVars, rowData) {
                 var tr = $("<tr></tr>");
                 for(var i in headerVars) {
-                    tr.append(getTableCell(headerVars[i], rowData));
+                    tr.append(listaAlumnoCelda(headerVars[i], rowData));
                 }
+                tr.append( $("<td></td>").html(btOpciones) );
                 return tr;
             }
 
-            function getTableCell(fieldName, rowData) {
+            function listaAlumnoCelda(fieldName, rowData) {
                 var td = $("<td></td>");
                 var fieldData = rowData[fieldName];
                 td.html(fieldData["value"]);
                 return td;
-            }
-
-
             }
         </script>
     </body>

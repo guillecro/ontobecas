@@ -2,38 +2,53 @@
 // Documentation can be found at: http://foundation.zurb.com/docs
 $(document).foundation();
 
+var conn = null;
+var ipStardog = "localhost"
+var db = "Ontobecas"
+var prefix = "PREFIX onto: <http://www.semanticweb.org/augusto/ontologies/2014/8/untitled-ontology-7#> "
+
 function iniciarConexion(){
-    conn = new Stardog.Connection();
-    conn.setEndpoint("http://localhost:5820");
-    conn.setReasoning("SL");
-    conn.setCredentials("admin", "admin");
+    if (conn == null){
+        conn = new Stardog.Connection();
+        conn.setEndpoint("http://localhost:5820");
+        conn.setReasoning("SL");
+        conn.setCredentials("admin", "admin");
+    }
+    else{
+        return true;
+    }
 }
 
-function query(){
-    $("#resultados").html("");
-    conn.query({
-        database: "Pizza",
-        query: "select distinct ?dataprop where { ?dataprop a owl:DatatypeProperty . OPTIONAL { ?dataprop rdfs:label ?label } }",
-        limit: 10,
-        offset: 0
-    },
-               function (data) {
-        var table = $("#resultados");
-
-        // get the sparql variables from the 'head' of the data.
-        var headerVars = data.head.vars;
-
-        // using the vars, make some table headers and add them to the table;
-        var trHeaders = getTableHeaders(headerVars);
-        table.append(trHeaders);
-
-        // grab the actual results from the data.
-        var bindings = data.results.bindings;
-
-        // for each result, make a table row and add it to the table.
-        for(rowIdx in bindings){
-            table.append(getTableRow(headerVars, bindings[rowIdx]));
+function ejecutarQuery(querySPARQL, handleData){
+    if (conn == null){
+        iniciarConexion();
+    }
+    if (conn != null){
+        console.log(prefix + querySPARQL);
+        conn.query({
+            database: db,
+            query: prefix + querySPARQL,
+            limit: 10,
+            offset: 0
+        },
+                   function (data) {
+            handleData(data);
         }
+                  );
+    }
+}
 
-    });
+function getTableRow(headerVars, rowData) {
+    var tr = $("<tr></tr>");
+    for(var i in headerVars) {
+        tr.append(getTableCell(headerVars[i], rowData));
+    }
+    return tr;
+}
+
+function getTableCell(fieldName, rowData) {
+    var td = $("<td></td>");
+    var fieldData = rowData[fieldName];
+    td.html(fieldData["value"]);
+    return td;
 }
