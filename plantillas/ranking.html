@@ -97,8 +97,11 @@
             var anioActual = 2015;
 
             $(document).ready(function() {
-                var querySPARQL = "SELECT ?anio WHERE { {?x a onto:CicloLectivoActual} {?x onto:AnioLectivo ?anio} }";
-                ejecutarQuery(querySPARQL, obtenerAnio);
+                //var querySPARQL = "SELECT ?anio WHERE { {?x a onto:CicloLectivoActual} {?x onto:AnioLectivo ?anio} }";
+                //ejecutarQuery(querySPARQL, obtenerAnio);
+
+                var querySPARQL = "SELECT ?x ?punt WHERE { {?x a onto:Alumno} {?x onto:Puntaje ?punt} }";
+                ejecutarQuery(querySPARQL, terminarCalculos);
             });
 
             function obtenerAnio(datos) {
@@ -193,11 +196,6 @@
                 ejecutarQuery(genQueryInsert(datos.results.bindings, 'ACMateriasRegulares'), borrarAprobRecien);
             }
 
-            "WHERE { {?x a onto:Alumno} {?x onto:NombreCompleto ?nombre} {?x onto:LU ?lu}" +
-                    "{?materia a onto:Materia} {?x onto:TieneAprobada ?materia} }" +
-                    "{?examen a onto:Examen} {?x onto:Rindio ?examen} {?examen onto:ReferidoA ?materia}" +
-                    "{?examen onto:FechaRendida "+ (valorDeSubQuery-1) +"} }" +
-
             function borrarAprobRecien() {
                 ejecutarQuery(genQueryDelete('ACMateriasAprobadasCicloAnterior'), calcularAprobRecien);
             }
@@ -213,7 +211,7 @@
             }
 
             function genQueryDelete(attributo) {
-                return = 'DELETE { ?x onto:' + attributo + ' ?y } WHERE { ?x onto:' + attributo + ' ?y }';
+                return 'DELETE { ?x onto:' + attributo + ' ?y } WHERE { ?x onto:' + attributo + ' ?y }';
             }
             function genQueryInsert(resultado, attributo) {
                 var query = 'INSERT DATA { ';
@@ -226,6 +224,13 @@
 
             function terminarCalculos() {
                 alert('holis');
+
+                var querySPARQL = "SELECT ?x ?ptd ?pda ?pif ?pcl ?pp ?pra ?pcs ?psv " +
+                    "WHERE { ?x a onto:Alumno ; onto:AEDependencia ?ptd ; onto:AEDesarrolloAcademico ?pda ; " +
+                    "onto:AEIngresos ?pif ; onto:AELaboral ?pcl ; onto:AEPromedio ?pp ; " +
+                    "onto:AERendimiento ?pra ; onto:AESalud ?pcs ; onto:AEVivienda ?psv . " +
+                    "MINUS { ?x a onto:AlumnoRechazado } }";
+                //ejecutarQuery(querySPARQL, null);
             }
         </script>
     </body>
