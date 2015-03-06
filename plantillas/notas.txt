@@ -56,3 +56,15 @@ var querySPARQL = "SELECT ?lu ?nombre (COUNT(DISTINCT(?materia)) AS ?cantidadMat
                     "WHERE { {?x a onto:Alumno} {?x onto:NombreCompleto ?nombre} {?x onto:LU ?lu}" +
                     "{?materia a onto:Materia} {?x onto:TieneAprobada ?materia} }" +
                     "GROUP BY ?x";*/
+                    
+Alumno(?a), ACHijosDependientes(?a, 0) -> AEDependencia(?a, 0)
+
+---
+
+Alumno(?a), ACHijosDependientes(?a, ?x),  equal(?x, 0) -> AEDependencia(?a, 0)
+
+Alumno(?a), Ingresante(?a, ?i), equal(?i, true) -> AEPromedio(?a, 14.0f)
+
+--
+
+Alumno(?x), ACPromedio(?x, ?y), multiply(?z, 3.5f, ?y) Ingresante(?x, ?i), equal(?i, false) -> AEPromedio(?x, ?z)

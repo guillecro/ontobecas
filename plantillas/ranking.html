@@ -15,72 +15,37 @@
         <div class="row">
             <div class="small-9 small-centered columns panel callout radius">
                 <h5>Listado de becados</h5>
-                <table width="100%">
+                <table id="listaBecados" width="100%">
                     <thead><tr>
                         <th>LU</th>
                         <th>Nombre</th>
-                        <th>PTD</th>
-                        <th>PDA</th>
-                        <th>PIF</th>
-                        <th>PCL</th>
-                        <th>PP</th>
-                        <th>PRA</th>
-                        <th>PCS</th>
-                        <th>PSV</th>
+                        <th title="Familiares dependientes">PTD</th>
+                        <th title="Desarrollo académico">PDA</th>
+                        <th title="Ingresos familiares">PIF</th>
+                        <th title="Condición laboral">PCL</th>
+                        <th title="Promedio">PP</th>
+                        <th title="Rendimiento académico">PRA</th>
+                        <th title="Cobertura de salud">PCS</th>
+                        <th title="Situación de vivienda">PSV</th>
                         <th>Total</th>
                     </tr></thead>
-                    <tbody>
-                        <tr>
-                            <td>20001</td>
-                            <td>Pablito</td>
-                            <td>5</td>
-                            <th>4</th>
-                            <td>5</td>
-                            <th>4</th>
-                            <td>5</td>
-                            <th>4</th>
-                            <td>5</td>
-                            <th>4</th>
-                            <td>30</td>
-                        </tr>
-                        <tr>
-                            <td>20002</td>
-                            <td>Lala</td>
-                            <td>5</td>
-                            <th>4</th>
-                            <td>5</td>
-                            <th>4</th>
-                            <td>5</td>
-                            <th>4</th>
-                            <td>5</td>
-                            <th>4</th>
-                            <td>30</td>
-                        </tr>
-                    </tbody>
+                    <tbody></tbody>
                 </table>
+                <div id="waitBeca" class="text-center">
+                   <i class="fa fa-spinner fa-pulse fa-fw fa-lg"></i>
+                </div>
                 <h5>Alumnos no becados</h5>
-                <table width="100%">
+                <table id="listaRechazados" width="100%">
                     <thead><tr>
                         <th>LU</th>
                         <th>Nombre</th>
-                        <th>Situación</th>
                         <th>Puntaje</th>
                     </tr></thead>
-                    <tbody>
-                        <tr>
-                            <td>20003</td>
-                            <td>Juanito</td>
-                            <td>Rechazado</td>
-                            <td>-</td>
-                        </tr>
-                        <tr>
-                            <td>20004</td>
-                            <td>Lola</td>
-                            <td>Bajo puntaje</td>
-                            <td>12</td>
-                        </tr>
-                    </tbody>
+                    <tbody></tbody>
                 </table>
+                <div id="waitRech" class="text-center">
+                   <i class="fa fa-spinner fa-pulse fa-fw fa-lg"></i>
+                </div>
             </div>
         </div>
         <div class="row">
@@ -94,143 +59,61 @@
         <script src="../public/assets/js/app.js"></script>
 
         <script type="text/javascript">
-            var anioActual = 2015;
-
             $(document).ready(function() {
-                //var querySPARQL = "SELECT ?anio WHERE { {?x a onto:CicloLectivoActual} {?x onto:AnioLectivo ?anio} }";
-                //ejecutarQuery(querySPARQL, obtenerAnio);
-
-                var querySPARQL = "SELECT ?x ?punt WHERE { {?x a onto:Alumno} {?x onto:Puntaje ?punt} }";
-                ejecutarQuery(querySPARQL, terminarCalculos);
+                var querySPARQL = "SELECT ?l ?n ?td ?da ?if ?cl ?pa ?ra ?cs ?sv " +
+                    encodeURIComponent("(?td + ?da + ?if + ?cl + ?pa + ?ra + ?cs + ?sv AS ?pu) ") +
+                    "WHERE { {?x a onto:Alumno} {?x onto:LU ?l} {?x onto:NombreCompleto ?n} " +
+                    "{?x onto:AEDependencia ?td} {?x onto:AEDesarrolloAcademico ?da} " +
+                    "{?x onto:AEIngresos ?if} {?x onto:AELaboral ?cl} " +
+                    "{?x onto:AEPromedio ?pa} {?x onto:AERendimiento ?ra} " +
+                    "{?x onto:AESalud ?cs} {?x onto:AEVivienda ?sv} . " +
+                    "MINUS { ?x a onto:AlumnoRechazado } } ORDER BY DESC(?pu)";
+                ejecutarQuery(querySPARQL, llenarBecados);
             });
 
-            function obtenerAnio(datos) {
+            function llenarBecados(datos){
+                var tabla = $("#listaBecados");
+                $('#waitBeca').slideToggle();
+
                 var resultado = datos.results.bindings;
-                if (resultado.length > 0) {
-                    anioActual = resultado[0].anio.value;
+                var campos = datos.head.vars;
+                for(i in resultado){
+                    tabla.append(listaFila(campos, resultado[i]));
                 }
-                borrarDependientes();
+                var querySPARQL = "SELECT ?l ?n " +
+                    encodeURIComponent("(?td + ?da + ?if + ?cl + ?pa + ?ra + ?cs + ?sv AS ?pu) ") +
+                    "WHERE { {?x a onto:AlumnoRechazado} {?x onto:LU ?l} {?x onto:NombreCompleto ?n} " +
+                    "{?x onto:AEDependencia ?td} {?x onto:AEDesarrolloAcademico ?da} " +
+                    "{?x onto:AEIngresos ?if} {?x onto:AELaboral ?cl} " +
+                    "{?x onto:AEPromedio ?pa} {?x onto:AERendimiento ?ra} " +
+                    "{?x onto:AESalud ?cs} {?x onto:AEVivienda ?sv} } ORDER BY DESC(?pu)";
+                ejecutarQuery(querySPARQL, llenarRechazados);
             }
 
-            function borrarDependientes() {
-                ejecutarQuery(genQueryDelete('ACHijosDependientes'), calcularDependientes);
-            }
-            function calcularDependientes(datos) {
-                var querySPARQL = 'SELECT ?x (COUNT(DISTINCT(?hijo)) AS ?y) WHERE { {?x a onto:Alumno} ' +
-                    '{?hijo a onto:FamiliarDependiente} {?x onto:ViveCon ?hijo} {?hijo onto:Parentesco "Hijo"} } GROUP BY ?x';
-                ejecutarQuery(querySPARQL, cargarDependientes);
-            }
-            function cargarDependientes(datos) {
-                ejecutarQuery(genQueryInsert(datos.results.bindings, 'ACHijosDependientes'), borrarFamiliares);
-            }
+            function llenarRechazados(datos){
+                var tabla = $("#listaRechazados");
+                $('#waitRech').slideToggle();
 
-            function borrarFamiliares() {
-                ejecutarQuery(genQueryDelete('ACFamiliaresActivos'), calcularFamiliares);
-            }
-            function calcularFamiliares(datos) {
-                var querySPARQL = "SELECT ?x (COUNT(DISTINCT(?familiar)) AS ?y) WHERE { {?x a onto:Alumno} " +
-                    "{?familiar a onto:FamiliarMayor} {?x onto:ViveCon ?familiar} } GROUP BY ?x";
-                ejecutarQuery(querySPARQL, cargarFamiliares);
-            }
-            function cargarFamiliares(datos) {
-                ejecutarQuery(genQueryInsert(datos.results.bindings, 'ACFamiliaresActivos'), borrarLaboral);
-            }
-
-            function borrarLaboral() {
-                ejecutarQuery(genQueryDelete('ACSumaCLValor'), calcularLaboral);
-            }
-            function calcularLaboral(datos) {
-                var querySPARQL = "SELECT ?x (SUM(?clValor) AS ?y) WHERE { {?x a onto:Alumno} {?familiar a onto:FamiliarMayor} " +
-                    "{?x onto:ViveCon ?familiar} {?familiar onto:CondicionLaboralValor ?clValor} } GROUP BY ?x";
-                ejecutarQuery(querySPARQL, cargarLaboral);
-            }
-            function cargarLaboral(datos) {
-                ejecutarQuery(genQueryInsert(datos.results.bindings, 'ACSumaCLValor'), borrarIngresos);
-            }
-
-            function borrarIngresos() {
-                ejecutarQuery(genQueryDelete('ACIngresosFamilia'), calcularIngresos);
-            }
-            function calcularIngresos(datos) {
-                var querySPARQL = "SELECT ?x (SUM(?sueldo) AS ?y) WHERE { {?x a onto:Alumno} {?familiar a onto:FamiliarMayor} " +
-                    "{?x onto:ViveCon ?familiar} {?familiar onto:IngresoMensual ?sueldo} } GROUP BY ?x";
-                ejecutarQuery(querySPARQL, cargarIngresos);
-            }
-            function cargarIngresos(datos) {
-                ejecutarQuery(genQueryInsert(datos.results.bindings, 'ACIngresosFamilia'), borrarPromedios);
-            }
-
-            function borrarPromedios() {
-                ejecutarQuery(genQueryDelete('ACPromedio'), calcularPromedios);
-            }
-            function calcularPromedios(datos) {
-                var querySPARQL = "SELECT ?x (AVG(?nota) AS ?y) WHERE { {?x a onto:Alumno} {?examen a onto:Examen} " +
-                    "{?x onto:Rindio ?examen} {?examen onto:Calificacion ?nota} } GROUP BY ?x";
-                ejecutarQuery(querySPARQL, cargarPromedios);
-            }
-            function cargarPromedios(datos) {
-                ejecutarQuery(genQueryInsert(datos.results.bindings, 'ACPromedio'), borrarAprobadas);
-            }
-
-            function borrarAprobadas() {
-                ejecutarQuery(genQueryDelete('ACMateriasAprobadas'), calcularAprobadas);
-            }
-            function calcularAprobadas(datos) {
-                var querySPARQL = "SELECT ?x (COUNT(DISTINCT(?materia)) AS ?y) WHERE { {?x a onto:Alumno} " +
-                    "{?materia a onto:Materia} {?x onto:TieneAprobada ?materia} } GROUP BY ?x";
-                ejecutarQuery(querySPARQL, cargarAprobadas);
-            }
-            function cargarAprobadas(datos) {
-                ejecutarQuery(genQueryInsert(datos.results.bindings, 'ACMateriasAprobadas'), borrarRegulares);
-            }
-
-            function borrarRegulares() {
-                ejecutarQuery(genQueryDelete('ACMateriasRegulares'), calcularRegulares);
-            }
-            function calcularRegulares(datos) {
-                var querySPARQL = "SELECT ?x (COUNT(DISTINCT(?materia)) AS ?y) WHERE { {?x a onto:Alumno} " +
-                    "{?materia a onto:Materia} {?x onto:TieneRegularizada ?materia} } GROUP BY ?x";
-                ejecutarQuery(querySPARQL, cargarRegulares);
-            }
-            function cargarRegulares(datos) {
-                ejecutarQuery(genQueryInsert(datos.results.bindings, 'ACMateriasRegulares'), borrarAprobRecien);
-            }
-
-            function borrarAprobRecien() {
-                ejecutarQuery(genQueryDelete('ACMateriasAprobadasCicloAnterior'), calcularAprobRecien);
-            }
-            function calcularAprobRecien(datos) {
-                var querySPARQL = "SELECT ?x (COUNT(DISTINCT(?materia)) AS ?y) WHERE { {?x a onto:Alumno} " +
-                    "{?materia a onto:Materia} {?x onto:TieneAprobada ?materia} {?examen a onto:Examen} " +
-                    "{?x onto:Rindio ?examen} {?examen onto:ReferidoA ?materia} } " +
-                    "{?examen onto:FechaRendida "+ (anioActual-1) +"} GROUP BY ?x";
-                ejecutarQuery(querySPARQL, cargarAprobRecien);
-            }
-            function cargarAprobRecien(datos) {
-                ejecutarQuery(genQueryInsert(datos.results.bindings, 'ACMateriasAprobadasCicloAnterior'), terminarCalculos);
-            }
-
-            function genQueryDelete(attributo) {
-                return 'DELETE { ?x onto:' + attributo + ' ?y } WHERE { ?x onto:' + attributo + ' ?y }';
-            }
-            function genQueryInsert(resultado, attributo) {
-                var query = 'INSERT DATA { ';
-                for(i in resultado) {
-                    query += '<' + resultado[i].x.value + '> onto:' + attributo + ' ' + resultado[i].y.value + '. ';
+                var resultado = datos.results.bindings;
+                var campos = datos.head.vars;
+                for(i in resultado){
+                    tabla.append(listaFila(campos, resultado[i]));
                 }
-                query += '}';
-                return query;
             }
 
-            function terminarCalculos() {
-                alert('holis');
+            function listaFila(headers, rowData) {
+                var tr = $("<tr></tr>");
+                for(var i in headers) {
+                    tr.append(listaCelda(headers[i], rowData));
+                }
+                return tr;
+            }
 
-                var querySPARQL = "SELECT ?x ?ptd ?pda ?pif ?pcl ?pp ?pra ?pcs ?psv " +
-                    "WHERE { ?x a onto:Alumno ; onto:AEDependencia ?ptd ; onto:AEDesarrolloAcademico ?pda ; " +
-                    "onto:AEIngresos ?pif ; onto:AELaboral ?pcl ; onto:AEPromedio ?pp ; " +
-                    "onto:AERendimiento ?pra ; onto:AESalud ?pcs ; onto:AEVivienda ?psv . " +
-                    "MINUS { ?x a onto:AlumnoRechazado } }";
-                //ejecutarQuery(querySPARQL, null);
+            function listaCelda(fields, rowData) {
+                var td = $("<td></td>");
+                var dato = rowData[fields];
+                td.html(dato["value"]);
+                return td;
             }
         </script>
     </body>
