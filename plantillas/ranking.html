@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Ontobecas - Becados</title>
         <link rel="stylesheet" href="../public/assets/css/app.css" />
+        <link rel="icon" type="image/x-icon" sizes="16x16" href="../public/assets/img/favicon.ico">
         <script src="../bower_components/modernizr/modernizr.js"></script>
     </head>
     <body>
@@ -111,10 +112,14 @@
                 return tr;
             }
 
-            function listaCelda(fields, rowData) {
+            function listaCelda(field, rowData) {
                 var td = $("<td></td>");
-                var dato = rowData[fields];
-                td.html(dato["value"]);
+                var dato = rowData[field];
+                if (field == 'n' || field == 'l') {
+                    td.text(dato["value"]);
+                } else {
+                    td.text(parseFloat(dato["value"]).toFixed(2));
+                }
                 return td;
             }
         </script>
