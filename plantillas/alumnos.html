@@ -21,7 +21,7 @@
                         <th>Nombre</th>
                         <th>Sexo</th>
                         <th>¿Ingresante?</th>
-                        <th>Opciones</th>
+                        <th>Ver mas</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -29,19 +29,17 @@
                     </tbody>
                 </table>
                 <div class="standby text-center">
-                   <i class="fa fa-spinner fa-pulse fa-fw fa-lg"></i><br />
-                   Cargando
+                    <i class="fa fa-spinner fa-pulse fa-fw fa-lg"></i>
+                    <br><small>Cargando...</small>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="small-9 small-centered columns"><a href="base.html" class="button expand">Volver</a></div>
+            <div class="small-5 small-centered columns"><a href="base.html" class="button expand radius"><i class="fa fa-reply fa-fw"></i>&nbsp;Volver</a></div>
         </div>
 
         <div class="bt-opciones" hidden>
-            <a href="#" title="Ver grupo familiar"><i class="fa fa-home fa-lg fa-fw"></i></a>
-            <a href="#" title="Ver historia academica"><i class="fa fa-graduation-cap fa-lg fa-fw"></i></a>
-            <a href="#" title="Ver datos completos"><i class="fa fa-user fa-lg fa-fw"></i></a>
+            <a href="info-alumno.html#idAlumno" title="Ver datos"><i class="fa fa-search fa-lg fa-fw"></i></a>
         </div>
 
         <script src="../public/assets/js/lodash.js"></script>
@@ -55,10 +53,6 @@
 
             $(document).ready(function() {
                 listarAlumnos();
-            });
-
-            $('.boton').click(function(){
-
             });
 
             function listarAlumnos(querySPARQL){
@@ -96,7 +90,7 @@
                 for(var i in headerVars) {
                     tr.append(listaAlumnoCelda(headerVars[i], rowData));
                 }
-                tr.append( $("<td></td>").html(btOpciones) );
+                tr.append( $("<td></td>").html( btOpciones.replace("idAlumno", rowData[headerVars[0]].value)) );
                 return tr;
             }
 

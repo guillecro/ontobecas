@@ -1,0 +1,485 @@
+<!doctype html>
+<html class="no-js" lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Ontobecas - Inicio</title>
+        <link rel="stylesheet" href="../public/assets/css/app.css" />
+        <script src="../bower_components/modernizr/modernizr.js"></script>
+    </head>
+    <body>
+        <!--        Aca va el cuerpo!!!-->
+
+        <div class="row">
+            <div class="small-9 small-centered columns">&nbsp;</div>
+        </div>
+        <div class="row">
+            <div class="small-9 small-centered columns panel callout radius">
+
+                <div class="row">
+                    <div class="text-center">
+                        <img src="../public/assets/img/profile.png">
+                        <br/>
+                        <h1 id="nombre"></h1>
+                        <h4 class="subheader" id="lu"></h4>
+                        <div class="standBy-nombre text-center">
+                            <i class="fa fa-spinner fa-pulse fa-fw fa-lg"></i>
+                            <br><small>Cargando...</small>
+                        </div>
+                        <br/>
+                    </div>
+                </div>
+
+                <ul id="tabsDatos" class="tabs" class="expand" data-tab>
+                    <li class="tab-title"><a href="#datosPersonales"><i class="fa fa-user fa-fw"></i>&nbsp;Datos Personales</a></li>
+                    <li class="tab-title"><a href="#datosFamiliares"><i class="fa fa-users fa-fw"></i>&nbsp;Datos Familiares</a></li>
+                    <li class="tab-title"><a href="#datosAcademicos"><i class="fa fa-graduation-cap fa-fw"></i>&nbsp;Datos Academicos</a></li>
+                </ul>
+                <div class="tabs-content">
+                    <div class="content" id="datosPersonales">
+                        <div class="standBy-dp text-center">
+                            <i class="fa fa-spinner fa-pulse fa-fw fa-lg"></i>
+                            <br><small>Cargando...</small>
+                        </div>
+                        <div class="dp" hidden>
+                            <div class="row">
+                                <div class="small-12 small-centered columns">
+                                    <div class="small-6 columns">
+                                        <div class="row collapse prefix-radius">
+                                            <div class="small-6 columns">
+                                                <span class="prefix">Sexo</span>
+                                            </div>
+                                            <div class="small-6 columns">
+                                                <input id="sexo" type="text" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="row collapse prefix-radius">
+                                            <div class="small-6 columns">
+                                                <span class="prefix">Estado Civil</span>
+                                            </div>
+                                            <div class="small-6 columns">
+                                                <input id="estadocivil" type="text" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="row collapse prefix-radius">
+                                            <div class="small-6 columns">
+                                                <span class="prefix">Cobertura Salud</span>
+                                            </div>
+                                            <div class="small-6 columns">
+                                                <input id="cobertura" type="text" disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="small-6 columns">
+                                        <div class="row collapse prefix-radius">
+                                            <div class="small-6 columns">
+                                                <span class="prefix">Nivel Estudios</span>
+                                            </div>
+                                            <div class="small-6 columns">
+                                                <input id="estudios" type="text" placeholder="Value">
+                                            </div>
+                                        </div>
+                                        <div class="row collapse prefix-radius">
+                                            <div class="small-6 columns">
+                                                <span class="prefix">Cargo en Universidad</span>
+                                            </div>
+                                            <div class="small-6 columns">
+                                                <input id="cargo" type="text" placeholder="Value">
+                                            </div>
+                                        </div>
+                                        <div class="row collapse prefix-radius">
+                                            <div class="small-6 columns">
+                                                <span class="prefix">Situacion Vivienda</span>
+                                            </div>
+                                            <div class="small-6 columns">
+                                                <input id="vivienda" type="text" disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content" id="datosFamiliares">
+                        <div class="row">
+                            <div class="small-12 small-centered columns">
+                                <h5>Familiares Mayores</h5>
+                                <table id="listaFamiliaresMayores" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Parentesco</th>
+                                            <th>Condicion Laboral</th>
+                                            <th>Ingreso Mensual</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                                <div class="standBy-df text-center">
+                                    <i class="fa fa-spinner fa-pulse fa-fw fa-lg"></i>
+                                    <br><small>Cargando...</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="small-6 columns">
+                                <div class="row collapse prefix-radius">
+                                    <div class="small-8 columns">
+                                        <span class="prefix">Familiares Dependientes</span>
+                                    </div>
+                                    <div class="small-4 columns">
+                                        <input id="candDepen" type="text" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="small-6 columns">
+                                <div class="row collapse prefix-radius">
+                                    <div class="small-6 columns">
+                                        <span class="prefix">Ingresos Totales</span>
+                                    </div>
+                                    <div class="small-6 columns">
+                                        <input id="ingresosTotal" type="text" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content" id="datosAcademicos">
+                        <div class="row">
+                            <div class="small-8 small-centered columns">
+                                <div class="small-6 columns">
+                                    <div class="row collapse prefix-radius">
+                                        <div class="small-6 columns">
+                                            <span class="prefix">Promedio</span>
+                                        </div>
+                                        <div class="small-6 columns">
+                                            <input id="promedio" type="text" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="small-6 columns">
+                                    <div class="row collapse prefix-radius">
+                                        <div class="small-6 columns">
+                                            <span class="prefix">Ingresante?</span>
+                                        </div>
+                                        <div class="small-6 columns">
+                                            <input id="ingresante" type="text" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+                        <div class="row">
+                            <div class="small-8 columns">
+                                <h5>Historia Academica</h5>
+                                <table id="listaExamenes" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Materia</th>
+                                            <th>Rendido</th>
+                                            <th>Nota</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                                <div class="standBy-da-examenes text-center">
+                                    <i class="fa fa-spinner fa-pulse fa-fw fa-lg"></i>
+                                    <br><small>Cargando...</small>
+                                </div>
+                            </div>
+                            <div class="small-4 columns">
+                                <h5>Inicio Cursado</h5>
+                                <table id="listaInicioCursado" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Materia</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                                <div class="standBy-da-materias text-center">
+                                    <i class="fa fa-spinner fa-pulse fa-fw fa-lg"></i>
+                                    <br><small>Cargando...</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="small-5 small-centered columns">
+                    <a href="alumnos.html" class="button expand radius"><i class="fa fa-reply fa-fw"></i>&nbsp;Volver</a>
+                </div>
+            </div>
+        </div>
+
+
+        <script src="../public/assets/js/lodash.js"></script>
+        <script src="../public/assets/js/stardog.js"></script>
+        <script src="../public/assets/js/jquery.min.js"></script>
+        <script src="../public/assets/js/foundation.min.js"></script>
+        <script src="../public/assets/js/app.js"></script>
+
+        <script type="text/javascript">
+            var alumnoId = null;
+            var dpBuscado = 0;
+            var dfBuscado = 0;
+            var daBuscado = 0;
+
+            $(document).ready(function() {
+                if (window.location.hash) {
+                    alumnoId = window.location.hash.substring(1);
+                }
+                buscarNombre();
+            });
+
+            $('#datosPersonales').on('toggled', function (event, tab) {
+                if(dpBuscado == 0){
+                    buscarDatosPersonales();
+                    dpBuscado=1;
+                }
+
+            });
+            $('#datosAcademicos').on('toggled', function (event, tab) {
+                if(daBuscado == 0){
+                    buscarExamenes();
+                    buscarCursando();
+                    buscarPromedio();
+                    esIngresante();
+                    daBuscado = 1;
+                }
+            });
+            $('#datosFamiliares').on('toggled', function (event, tab) {
+                if(dfBuscado == 0){
+                    buscarListaFamiliaresMayores();
+                    buscarTotalIngresosFamiliares();
+                    buscarCantFamiliaresDependientes();
+                    dfBuscado = 1;
+                }
+            });
+
+            function buscarNombre(){
+                var querySPARQL = "SELECT ?nombre"
+                + " WHERE {"
+                + "{?x a onto:Alumno}"
+                + "{?x onto:LU " + alumnoId + "}"
+                + "{?x onto:NombreCompleto ?nombre}"
+                + "}";
+                // Se ejecuta el querySPARQL.
+                ejecutarQuery(querySPARQL, llenarNombre);
+            }
+
+            function llenarNombre(datos){
+                $('.standBy-nombre').hide();
+                datoNombre = datos.results.bindings[0];
+                $('#lu').html( "LU: " + alumnoId );
+                $('#nombre').html( $("<b></b>").html(datoNombre.nombre.value) );
+            }
+
+            function buscarDatosPersonales(){
+                var querySPARQL = "SELECT ?sexo ?estadocivil ?cobertura ?vivienda ?estudios ?ingresa ?cargo"
+                + " WHERE {"
+                + "{?x a onto:Alumno}"
+                + "{?x onto:LU " + alumnoId + "}"
+                + "{?x onto:Sexo ?sexo}"
+                + "{?x onto:EstadoCivil ?estadocivil}"
+                + "{?x onto:CoberturaSalud ?cobertura}"
+                + "{?x onto:SituacionVivienda ?vivienda}"
+                + "{?x onto:NivelEstudios ?estudios}"
+                + "{?x onto:Ingresante ?ingresa}"
+                + "{?x onto:CargoEnUniversidad ?cargo}"
+                + "}";
+                // Se ejecuta el querySPARQL.
+                ejecutarQuery(querySPARQL, llenarDatosPersonales);
+            }
+
+            function llenarDatosPersonales(datos){
+                var datosPersonales = datos.results.bindings[0];
+                $('#sexo').val(datosPersonales.sexo.value);
+                $('#estadocivil').val(datosPersonales.estadocivil.value);
+                $('#cobertura').val(datosPersonales.cobertura.value);
+                $('#vivienda').val(datosPersonales.vivienda.value);
+                $('#estudios').val(datosPersonales.estudios.value);
+                $('#cargo').val(datosPersonales.cargo.value);
+                $('.dp').removeAttr('hidden');
+                $('.standBy-dp').hide();
+            }
+
+            function buscarListaFamiliaresMayores(){
+                var querySPARQL = "SELECT ?parentesco ?laboral ?ingreso"
+                + " WHERE { "
+                + "{?x a onto:Alumno}"
+                + "{?x onto:LU " + alumnoId +"}"
+                + "{?x onto:NombreCompleto ?nombre}"
+                + "{?x onto:ViveCon ?familiar}"
+                + "{?familiar onto:Parentesco ?parentesco}"
+                + "{?familiar onto:CondicionLaboral ?laboral}"
+                + "{?familiar onto:IngresoMensual ?ingreso}"
+                + "}";
+                // Se ejecuta el querySPARQL.
+                ejecutarQuery(querySPARQL, llenarListaFamiliaresMayores);
+            }
+
+            function llenarListaFamiliaresMayores(datos){
+                console.log(datos);
+                $('.standBy-df').hide();
+                var datosHeader = datos.head.vars;
+                var datosFilas = datos.results.bindings;
+                var tabla = $('#listaFamiliaresMayores');
+                for(fila in datosFilas){
+                    // Para cada resultado, hago la fila correspondiente.
+                    tabla.append(llenarFila(datosHeader, datosFilas[fila]));
+                }
+            }
+
+            function buscarTotalIngresosFamiliares(){
+                var querySPARQL = "SELECT (SUM(?ingreso) AS ?totalingreso)"
+                + " WHERE { "
+                + "{?x a onto:Alumno}"
+                + "{?x onto:LU " + alumnoId +"}"
+                + "{?x onto:ViveCon ?familiar}"
+                + "{?familiar onto:Parentesco ?parentesco}"
+                + "{?familiar onto:CondicionLaboral ?laboral}"
+                + "{?familiar onto:IngresoMensual ?ingreso}"
+                + "}";
+                // Se ejecuta el querySPARQL.
+                ejecutarQuery(querySPARQL, llenarTotalIngresosFamiliares);
+            }
+
+            function llenarTotalIngresosFamiliares(datos){
+                console.log(datos);
+                var dato = datos.results.bindings[0];
+                $("#ingresosTotal").val(dato.totalingreso.value);
+            }
+
+            function buscarCantFamiliaresDependientes(){
+                var querySPARQL = "SELECT DISTINCT (COUNT(?familiar) AS ?cantdepen)"
+                + " WHERE { "
+                + "{?x a onto:Alumno}"
+                + "{?x onto:LU " + alumnoId + "}"
+                + "{?x onto:NombreCompleto ?nombre}"
+                + "{?x onto:ViveCon ?familiar}"
+                + "{?familiar onto:Parentesco ?parentesco}"
+                + "{?familiar a onto:FamiliarDependiente}"
+                + "}";
+                // Se ejecuta el querySPARQL.
+                ejecutarQuery(querySPARQL, llenarCantFamiliaresDependientes);
+            }
+
+            function llenarCantFamiliaresDependientes(datos){
+                console.log(datos);
+                var dato = datos.results.bindings[0];
+                $("#candDepen").val(dato.cantdepen.value);
+            }
+
+            function buscarExamenes(){
+                var querySPARQL = "SELECT (strafter(str(?materia), \"#\") AS ?nombremateria) ?fecha ?nota"
+                + " WHERE { "
+                + "{?x a onto:Alumno}"
+                + "{?x onto:LU " + alumnoId + "}"
+                + "{?x onto:Rindio ?examen}"
+                + "{?examen onto:ReferidoA ?materia}"
+                + "{?materia a onto:Materia}"
+                + "{?examen onto:FechaRendida ?fecha}"
+                + "{?examen onto:Calificacion ?nota}"
+                + "}";
+                // Se ejecuta el querySPARQL.
+                ejecutarQuery(querySPARQL, llenarExamenes);
+            }
+
+            function llenarExamenes(datos){
+                console.log(datos);
+                $('.standBy-da-examenes').hide();
+                var datosHeader = datos.head.vars;
+                var datosFilas = datos.results.bindings;
+                var tabla = $('#listaExamenes');
+                for(fila in datosFilas){
+                    // Para cada resultado, hago la fila correspondiente.
+                    tabla.append(llenarFila(datosHeader, datosFilas[fila]));
+                }
+            }
+
+            function buscarCursando(){
+                var querySPARQL = "SELECT (strafter(str(?materia), \"#\") AS ?nombreMateria)"
+                + " WHERE { "
+                + "{?x a onto:Alumno}"
+                + "{?x onto:LU " + alumnoId + "}"
+                + "{?x onto:InicioCursado ?materia}"
+                + "{?materia a onto:Materia}"
+                + "}"
+                // Se ejecuta el querySPARQL.
+                ejecutarQuery(querySPARQL, llenarCursando);
+            }
+
+            function llenarCursando(datos){
+                console.log(datos);
+                $('.standBy-da-materias').hide();
+                var datosHeader = datos.head.vars;
+                var datosFilas = datos.results.bindings;
+                var tabla = $('#listaInicioCursado');
+                for(fila in datosFilas){
+                    // Para cada resultado, hago la fila correspondiente.
+                    tabla.append(llenarFila(datosHeader, datosFilas[fila]));
+                }
+            }
+
+            function buscarPromedio(){
+                var querySPARQL = "SELECT ?promedio"
+                + " WHERE { "
+                + "{?x a onto:Alumno}"
+                + "{?x onto:LU " + alumnoId + "}"
+                + "{?x onto:ACPromedio ?promedio}"
+                + "}";
+                // Se ejecuta el querySPARQL.
+                ejecutarQuery(querySPARQL, llenarPromedio);
+            }
+
+            function llenarPromedio(datos){
+                console.log(datos);
+                var dato = datos.results.bindings[0];
+                $("#promedio").val(dato.promedio.value);
+            }
+
+            function esIngresante(){
+                var querySPARQL = "SELECT ?ingresante"
+                + " WHERE { "
+                + "{?x a onto:Alumno}"
+                + "{?x onto:LU " + alumnoId + "}"
+                + "{?x onto:Ingresante ?ingresante}"
+                + "}";
+                // Se ejecuta el querySPARQL.
+                ejecutarQuery(querySPARQL, llenarIngresante);
+            }
+
+            function llenarIngresante(datos){
+                console.log(datos);
+                var dato = datos.results.bindings[0];
+                if(dato.ingresante.value == "true"){
+                    $('#ingresante').val("Si");
+                } else {
+                    $('#ingresante').val("No");
+                }
+            }
+
+            function llenarFila(headerVars, rowData) {
+                var tr = $("<tr></tr>");
+                for(var i in headerVars) {
+                    tr.append(llenarCelda(headerVars[i], rowData));
+                }
+                return tr;
+            }
+
+            function llenarCelda(fieldName, rowData) {
+                var td = $("<td></td>");
+                var fieldData = rowData[fieldName];
+                td.html(fieldData["value"]);
+                return td;
+            }
+
+        </script>
+    </body>
+</html>

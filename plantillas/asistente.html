@@ -14,18 +14,22 @@
             <div class="small-9 small-centered columns">&nbsp;</div>
         </div>
         <div class="row">
-            <div class="small-9 small-centered columns panel callout radius">
+            <div class="small-6 small-centered columns panel callout radius">
                 <h5>Asistente de becas</h5>
                 <ul>
-                    <li>El año actual es: <span id="campoAnio">x</span></li>
-                    <li>El valor de la canasta básica familiar es: <span id="campoCanasta">x</span></li>
+                    <li>El año actual es: <span class="standBy"><i class="fa fa-spinner fa-pulse fa-fw"></i> <small>Cargando</small></span><span id="campoAnio"></span></li>
+                    <li>El valor de la canasta básica familiar es: <span class="standBy"><i class="fa fa-spinner fa-pulse fa-fw"></i> <small>Cargando</small></span><span id="campoCanasta"></span></li>
                 </ul>
-                <a href="#" id="btCalcular" class="button secondary expand">Calcular agregaciones</a>
-                <a href="ranking.html" class="button alert expand">Asignar becas</a>
+                <div class="small-11 small-centered columns">
+                <ul class="stack button-group radius">
+                    <li><a href="#" id="btCalcular" class="button secondary">Calcular agregaciones</a></li>
+                    <li><a href="ranking.html" class="button alert">Asignar becas</a></li>
+                </ul>
+                </div>
             </div>
         </div>
         <div class="row">
-            <div class="small-9 small-centered columns"><a href="base.html" class="button expand">Volver</a></div>
+            <div class="small-5 small-centered columns"><a href="base.html" class="button radius expand"><i class="fa fa-reply fa-fw"></i>&nbsp;Volver</a></div>
         </div>
 
         <script src="../public/assets/js/lodash.js"></script>
@@ -49,6 +53,7 @@
             }
 
             function obtenerDatos(datos) {
+                $(".standBy").hide();
                 var datosHeader = datos.head.vars;
                 var resultado = datos.results.bindings;
                 if (resultado.length > 0) {

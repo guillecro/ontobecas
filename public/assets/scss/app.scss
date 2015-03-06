@@ -40,3 +40,15 @@
 //   "foundation/components/visibility";
 
 @import "../css/font-awesome.css";
+
+body{
+    background: #fff;
+    background-image: url("../img/logo.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+}
+
+input[disabled='disabled'] {
+    background: #fff;
+    color: #000;
+}
