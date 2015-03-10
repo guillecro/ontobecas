@@ -9,28 +9,66 @@
         <script src="../bower_components/modernizr/modernizr.js"></script>
     </head>
     <body>
-        <div id="myModal" class="reveal-modal" data-reveal><h2>Cargando...</h2></div>
+        <div id="myModal" class="reveal-modal text-center" data-reveal>
+            <h2><i class="fa fa-spinner fa-pulse fa-fw"></i> Cargando...</h2>
+        </div>
 
         <div class="row">
-            <div class="small-9 small-centered columns">&nbsp;</div>
+            <div class="small-6 small-centered columns">&nbsp;</div>
         </div>
         <div class="row">
             <div class="small-6 small-centered columns panel callout radius">
-                <h5>Asistente de becas</h5>
-                <ul>
-                    <li>El año actual es: <span class="standBy"><i class="fa fa-spinner fa-pulse fa-fw"></i> <small>Cargando</small></span><span id="campoAnio"></span></li>
-                    <li>El valor de la canasta básica familiar es: <span class="standBy"><i class="fa fa-spinner fa-pulse fa-fw"></i> <small>Cargando</small></span><span id="campoCanasta"></span></li>
-                </ul>
+                <h5>Asistente de becas</h5><br>
                 <div class="small-11 small-centered columns">
-                <ul class="stack button-group radius">
-                    <li><a href="#" id="btCalcular" class="button secondary">Calcular agregaciones</a></li>
-                    <li><a href="ranking.html" class="button alert">Asignar becas</a></li>
-                </ul>
+                    <div class="row collapse">
+                        <div class="small-5 columns">
+                            <span class="prefix">Año actual</span>
+                        </div>
+                        <div class="small-7 columns">
+                            <input type="text" id="campoAnio" placeholder="cargando..." readonly>
+                        </div>
+                    </div>
+                    <div class="row collapse">
+                        <div class="small-5 columns">
+                            <span class="prefix">Valor canasta familiar</span>
+                        </div>
+                        <div class="small-7 columns">
+                            <input type="text" id="campoCana" placeholder="cargando..." readonly>
+                        </div>
+                    </div>
+                    <div class="row collapse">
+                        <div class="small-5 columns">
+                            <span class="prefix">Promedio mínimo</span>
+                        </div>
+                        <div class="small-4 columns">
+                            <input type="text" id="campoProm" placeholder="cargando...">
+                        </div>
+                        <div class="small-3 columns">
+                            <a href="#" id="btPromedio" class="button postfix">Modificar</a>
+                        </div>
+                    </div>
+                    <div class="row collapse">
+                        <div class="small-5 columns">
+                            <span class="prefix">Materias necesarias</span>
+                        </div>
+                        <div class="small-4 columns">
+                            <input type="text" id="campoMats" placeholder="cargando...">
+                        </div>
+                        <div class="small-3 columns">
+                            <a href="#" id="btMaterias" class="button postfix">Modificar</a>
+                        </div>
+                    </div>
+                    <ul class="stack button-group radius">
+                        <li><a href="#" id="btCalcular" class="button secondary">Calcular agregaciones</a></li>
+                        <li><a href="ranking.html" class="button alert">Asignar becas</a></li>
+                    </ul>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="small-5 small-centered columns"><a href="base.html" class="button radius expand"><i class="fa fa-reply fa-fw"></i>&nbsp;Volver</a></div>
+            <div class="small-5 small-centered columns">
+                <a href="base.html" class="button radius expand"><i class="fa fa-reply fa-fw"></i>&nbsp;Volver</a>
+            </div>
         </div>
 
         <script src="../public/assets/js/lodash.js"></script>
@@ -47,9 +85,9 @@
             });
 
             function enviarConsulta() {
-                var querySPARQL = "SELECT ?anio ?canasta " +
+                var querySPARQL = "SELECT ?anio ?canasta ?prom ?mats " +
                 "WHERE { {?x a onto:CicloLectivoActual} {?x onto:AnioLectivo ?anio}" +
-                "{?x onto:ValorCanastaFamiliar ?canasta} }";
+                "{?x onto:ValorCanastaFamiliar ?canasta} {?x onto:CortePromedio ?prom} {?x onto:CorteMaterias ?mats}}";
                 ejecutarQuery(querySPARQL, obtenerDatos);
             }
 
@@ -58,14 +96,38 @@
                 var datosHeader = datos.head.vars;
                 var resultado = datos.results.bindings;
                 if (resultado.length > 0) {
-                    $("#campoAnio").text(resultado[0].anio.value);
-                    $("#campoCanasta").text(resultado[0].canasta.value);
+                    $("#campoAnio").val(resultado[0].anio.value);
+                    $("#campoCana").val(resultado[0].canasta.value);
+                    $("#campoProm").val(resultado[0].prom.value);
+                    $("#campoMats").val(resultado[0].mats.value);
                     anioActual = resultado[0].anio.value;
                 }
                 $("#btCalcular").click(function() {
                     $('#myModal').foundation('reveal', 'open');
                     borrarDependientes();
                 });
+                $("#btPromedio").click(function() {
+                    $('#myModal').foundation('reveal', 'open');
+                    var querySPARQL = "DELETE {?x onto:CortePromedio ?y} WHERE {{?x a onto:CicloLectivoActual}{?x onto:CortePromedio ?y}}";
+                    ejecutarQuery(querySPARQL, insertarProm);
+                });
+                $("#btMaterias").click(function() {
+                    $('#myModal').foundation('reveal', 'open');
+                    var querySPARQL = "DELETE {?x onto:CorteMaterias ?y} WHERE {{?x a onto:CicloLectivoActual}{?x onto:CorteMaterias ?y}}";
+                    ejecutarQuery(querySPARQL, insertarMats);
+                });
+            }
+
+            function insertarProm(datos) {
+                var prom = $("#campoProm").val();
+                var querySPARQL = "INSERT {?x onto:CortePromedio "+ prom +"} WHERE {?x a onto:CicloLectivoActual}";
+                ejecutarQuery(querySPARQL, terminarCalculos);
+            }
+
+            function insertarMats(datos) {
+                var mats = $("#campoMats").val();
+                var querySPARQL = "INSERT {?x onto:CorteMaterias "+ mats +"} WHERE {?x a onto:CicloLectivoActual}";
+                ejecutarQuery(querySPARQL, terminarCalculos);
             }
 
             function borrarDependientes() {
