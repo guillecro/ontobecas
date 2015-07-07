@@ -1,0 +1,33 @@
+// START EL SERVER DE STARDOG
+// -----------------------------
+
+1. Abrir el Simbolo de sistema (command prompt) como administrador (clic derecho)
+2. Ir a donde este la carpeta \stardog-2.2.4  (Depende de donde ustedes hayan dejado la carpeta).
+3. Ejecutar "stardog-admin server start" para que comience a andar el servidor
+
+C:\> cd C:\stardog-2.2.4\bin
+C:\stardog-2.2.4\bin>stardog-admin server start
+
+NOTA: No cerrar la ventana. Si ocurre, hay que borrar el archivo "system.lock" en C:\stardog-2.2.4
+
+// STOP EL SERVER DE STARDOG
+// -----------------------------
+
+1. Abrir -OTRO- Simbolo de sistema (command prompt) como administrador (clic derecho)
+2. En el \bin del stardog hay que ejecutar:
+
+C:\stardog-2.2.4\bin>stardog-admin server stop
+
+// AGREGAR LA BASE DE DATOS
+// -----------------------------
+
+1. Abrir -OTRO- Simbolo de sistema (command prompt) como administrador (clic derecho)
+2. En el \bin del stardog hay que ejecutar:
+
+C:\stardog-2.2.4\bin>stardog-admin db create -n Ontobecas -o icv.enabled=false
+icv.consistency.automatic=false icv.reasoning.type=SL -- C:\ontobecas.ttl
+
+// ELIMINAR LA BASE DE DATOS
+// -----------------------------
+
+stardog-admin db drop Ontobecas
